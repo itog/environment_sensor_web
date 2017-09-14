@@ -4,9 +4,6 @@
     <link rel="stylesheet" type="text/css" href="css/style.css">
 
     <script src="https://sdk.amazonaws.com/js/aws-sdk-2.84.0.min.js"></script>
-    <script src="https://d3js.org/d3.v4.js"></script>
-    <script src="http://dimplejs.org/dist/dimple.v2.3.0.min.js"></script>
-    
     <script src="https://code.highcharts.com/highcharts.js"></script>
     <script src="https://code.highcharts.com/modules/exporting.js"></script>
 
@@ -47,20 +44,15 @@ function getDynamoData() {
           var myDate = new Date(dateNum);
           myDate.setTime(myDate.getTime() - myDate.getTimezoneOffset()*60*1000 );
           var strDate = myDate.toISOString();
-//          temperatureData.push({"timestamp":strDate, "temperature":item.payload.M.state.M.reported.M.temperature.N});
           temperatureData.push(parseFloat(item.payload.M.state.M.reported.M.temperature.N));
-//          humidityData.push({"timestamp":strDate, "humidity":item.payload.M.state.M.reported.M.humidity.N});
           humidityData.push(parseFloat(item.payload.M.state.M.reported.M.humidity.N));
         })
-        // drawChart("#temperatureChart", temperatureData, "timestamp", "temperature");
-        // drawChart("#humidityChart", humidityData, "timestamp", "humidity");
-        console.log(temperatureData);
-        drawChart2(temperatureData, humidityData);
+        drawChart(temperatureData, humidityData);
       }
   });
 }
 
-function drawChart2(temperature, humidity) {
+function drawChart(temperature, humidity) {
   Highcharts.chart('container', {
     chart: {
         type: 'area'
@@ -136,19 +128,6 @@ function drawChart2(temperature, humidity) {
         data: humidity
     }]
   });
-}
-
-// Draw the chart with dimple
-function drawChart(id, chartData, xLabel, yLabel) {
-  var svg = dimple.newSvg(id, 800, 600);
-  var chart = new dimple.chart(svg, chartData);
-//  chart.setBounds(60,30, 510, 305);
-  var x = chart.addTimeAxis("x", xLabel,"%Y-%m-%dT%H:%M:%S.%LZ","%m/%d %H:%M:%S");
-//  x.timePeriod = d3.timeMinutes;
-//  x.timeInterval = 10;
-  chart.addMeasureAxis("y", yLabel);
-  chart.addSeries(null, dimple.plot.line);
-  chart.draw();
 }
 
 //-->
