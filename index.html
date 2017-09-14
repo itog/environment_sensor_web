@@ -1,0 +1,177 @@
+<html>
+<head>
+    <title>Environment Sensor</title>
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+
+    <script src="https://sdk.amazonaws.com/js/aws-sdk-2.84.0.min.js"></script>
+    <script src="https://d3js.org/d3.v4.js"></script>
+    <script src="http://dimplejs.org/dist/dimple.v2.3.0.min.js"></script>
+    
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+
+    <script>
+//<!--
+//Connect to Dynamo via Cognito Unauthenticated
+function getDynamoData() {
+  var db, tableName, creds, data;
+  var temperatureData = [];
+  var humidityData = [];
+
+  AWS.config.region = 'ap-northeast-1';
+  AWS.config.credentials = new AWS.CognitoIdentityCredentials({
+    IdentityPoolId: "Identity Pool Id",
+  });
+
+  db = new AWS.DynamoDB();
+  tableName = "esp32-environment-sensor";
+
+  var params = {
+      TableName: tableName,
+      KeyConditions: {
+          'name': {
+              'ComparisonOperator': 'EQ',
+              'AttributeValueList': [{S: 'esp32dk-01'}]
+          }
+      },
+      ScanIndexForward: false,
+      Limit: 12*24
+  }
+  db.query(params, function(err, data) {
+      if (err) {
+        console.log(err);
+      } else {
+        console.log(data);
+        data.Items.forEach(function(item){
+          var dateNum = Number(item.timestamp.S);
+          var myDate = new Date(dateNum);
+          myDate.setTime(myDate.getTime() - myDate.getTimezoneOffset()*60*1000 );
+          var strDate = myDate.toISOString();
+//          temperatureData.push({"timestamp":strDate, "temperature":item.payload.M.state.M.reported.M.temperature.N});
+          temperatureData.push(parseFloat(item.payload.M.state.M.reported.M.temperature.N));
+//          humidityData.push({"timestamp":strDate, "humidity":item.payload.M.state.M.reported.M.humidity.N});
+          humidityData.push(parseFloat(item.payload.M.state.M.reported.M.humidity.N));
+        })
+        // drawChart("#temperatureChart", temperatureData, "timestamp", "temperature");
+        // drawChart("#humidityChart", humidityData, "timestamp", "humidity");
+        console.log(temperatureData);
+        drawChart2(temperatureData, humidityData);
+      }
+  });
+}
+
+function drawChart2(temperature, humidity) {
+  Highcharts.chart('container', {
+    chart: {
+        type: 'area'
+    },
+    title: {
+        text: '温度＆湿度'
+    },
+    subtitle: {
+        text: 'FabKominka Environment Sensor'
+    },
+    xAxis: {
+        allowDecimals: false,
+        labels: {
+            formatter: function () {
+                return this.value; // clean, unformatted number for year
+            }
+        }
+    },
+    yAxis:
+ [{ // Primary yAxis
+        labels: {
+            format: '{value}°C',
+            style: {
+                color: Highcharts.getOptions().colors[1]
+            }
+        },
+        title: {
+            text: 'Temperature',
+            style: {
+                color: Highcharts.getOptions().colors[1]
+            }
+        }
+    }, { // Secondary yAxis
+        title: {
+            text: 'humidity',
+            style: {
+                color: Highcharts.getOptions().colors[1]
+            }
+        },
+        labels: {
+            format: '{value} %',
+            style: {
+                color: Highcharts.getOptions().colors[1]
+            }
+        },
+        opposite: true
+    }],
+    tooltip: {
+        pointFormat: '{series.name} produced <b>{point.y:,.0f}</b><br/>warheads in {point.x}'
+    },
+    plotOptions: {
+        area: {
+            pointStart: 1940,
+            marker: {
+                enabled: false,
+                symbol: 'circle',
+                radius: 2,
+                states: {
+                    hover: {
+                        enabled: true
+                    }
+                }
+            }
+        }
+    },
+    series: [{
+        name: 'temperature',
+        yAxis: 0,
+        data: temperature
+    }, {
+        name: 'humidity',
+        yAxis: 1,
+        data: humidity
+    }]
+  });
+}
+
+// Draw the chart with dimple
+function drawChart(id, chartData, xLabel, yLabel) {
+  var svg = dimple.newSvg(id, 800, 600);
+  var chart = new dimple.chart(svg, chartData);
+//  chart.setBounds(60,30, 510, 305);
+  var x = chart.addTimeAxis("x", xLabel,"%Y-%m-%dT%H:%M:%S.%LZ","%m/%d %H:%M:%S");
+//  x.timePeriod = d3.timeMinutes;
+//  x.timeInterval = 10;
+  chart.addMeasureAxis("y", yLabel);
+  chart.addSeries(null, dimple.plot.line);
+  chart.draw();
+}
+
+//-->
+    </script>
+
+</head>
+<body onload="getDynamoData()">
+    <div class="top">
+        <div class="ENVIRONMENTAL-MONITO">ENVIRONMENTAL MONITORING</div>
+        <div class="Oval-2">
+            <div class="ojisan">
+            <img src="img/ojisan.png"
+        srcset="img/ojisan@2x.png 2x,
+                img/ojisan@3x.png 3x"
+        class="ojisan">
+            </div>
+        </div>
+        <div class="Rectangle-3">
+            <div class="layer">暑くて過ごしづらいよぅ。。。</div>
+        </div>
+        <div id="container" class="Rectangle" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+    </div>
+  <div id="humidityChart" />
+  <div id="temperatureChart" />
+</body>
+</html>
