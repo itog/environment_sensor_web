@@ -136,21 +136,41 @@ function drawChart(temperature, humidity) {
 </head>
 <body onload="getDynamoData()">
     <div class="top">
-        <div class="ENVIRONMENTAL-MONITO">ENVIRONMENTAL MONITORING</div>
-        <div class="Oval-2">
-            <div class="ojisan">
-            <img src="img/ojisan.png"
-        srcset="img/ojisan@2x.png 2x,
-                img/ojisan@3x.png 3x"
-        class="ojisan">
+        <div class="title">ENVIRONMENTAL　MONITORING</div>
+        <div class="ojisan">
+            <div class="ojisan-img">
+              <img src="img/ojisan.png" srcset="img/ojisan@2x.png 2x, img/ojisan@3x.png 3x">
             </div>
         </div>
-        <div class="Rectangle-3">
-            <div class="layer">暑くて過ごしづらいよぅ。。。</div>
+        <div class="popup">
+            <div class="popup-text">暑くて過ごしづらいよぅ。。。</div>
         </div>
-        <div id="container" class="Rectangle" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
     </div>
-  <div id="humidityChart" />
-  <div id="temperatureChart" />
+  <div id="container" class="dataContents" style="min-width: 310px; height: 400px; margin: 0 auto">
+    <div class="numberContents">
+      <div class="numberBox numberBox-temperature">
+        <div class="number_titles">
+          <span class="number_ja">温度</span>
+          <span class="number_en">TEMPREATURE</span>
+        </div>
+        <div class="number_values">
+          <span class="number_value">27</span>
+          <span class="number_unit">℃</span>
+        </div>
+      </div>
+      <div class="numberBox numberBox-humid">
+        <div class="number_titles">
+          <span class="number_ja">湿度</span>
+          <span class="number_en">HUMIDITY</span>
+        </div>
+        <div class="number_values">
+          <span class="number_value">64</span>
+          <span class="number_unit">%</span>
+        </div>
+      </div>
+    </div>
+    <div id="humidityChart" />
+    <div id="temperatureChart" />
+  </div>
 </body>
 </html>

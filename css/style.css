@@ -1,58 +1,102 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 
-.top {
-  width: 1024px;
-  height: 1024px;
+body {
   background-color: #f8f8f8;
 }
 
-.ENVIRONMENTAL-MONITO {
-  width: 465px;
-  height: 55px;
+.title {
   font-family: Bebas;
   font-size: 42px;
-  letter-spacing: -2px;
   text-align: center;
   color: #666666;
   margin: 0 auto;
+  padding: 20px 0;
 }
 
-.Oval-2 {
+.ojisan {
   width: 324px;
   height: 324px;
   margin: 0 auto;
   background-color: #ffffff;
-  border-radius:50%
+  border-radius:50%;
+  padding-top: 40px;
+  text-align: center;
 }
 
-.ojisan {
-  width: 188px;
-  height: 237px;
-  object-fit: contain;
+.ojisan-img {
   margin: 0 auto;
 }
 
-.Rectangle-3 {
-  width: 430px;
-  height: 49px;
+.popup {
+  text-align: center;
+  margin: -50px 0 20px;
+}
+
+.popup-text {
+  padding: 5px 30px;
   opacity: 0.8;
   border-radius: 100px;
   background-color: #ffffff;
   border: solid 1px #cccccc;
-  margin: 0 auto;
-}
-
-.layer {
-  width: 350px;
-  height: 25px;
-  font-family: HiraKakuPro-W6;
   font-size: 25px;
-  text-align: center;
-  color: #999999;
+  color: #666;
+  display: inline-block;
+  font-weight: bold;
 }
 
-.Rectangle {
-  width: 961px;
-  height: 539px;
+.dataContents {
+  width: 90%;
+  height: 540px;
   border-radius: 10px;
   background-color: #ffffff;
+  margin-bottom: 0 auto 30px;
+}
+
+.numberContents {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+}
+.numberBox {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  margin: 10px 0;
+}
+.numberBox-temperature {
+  color: #ef6377;
+}
+.numberBox-humid {
+  color: #4990e2;
+}
+.number_titles {
+  text-align: right;
+  margin-right: 10px;
+}
+.number_titles span {
+  display: block;
+}
+.number_ja {
+  font-size: 44px;
+  font-weight: bold;
+}
+.number_en {
+  font-family: bebas;
+  font-size: 46px;
+  opacity: .2;
+  margin-top: -25px;
+}
+.number_values {
+}
+.number_value {
+  font-size: 92px;
+  font-family: bebas;
+}
+.number_unit {
+  font-size: 52px;
+  font-weight: bold;
 }
