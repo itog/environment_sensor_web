@@ -6,7 +6,7 @@
     <script src="https://sdk.amazonaws.com/js/aws-sdk-2.84.0.min.js"></script>
     <script src="https://code.highcharts.com/highcharts.js"></script>
     <script src="https://code.highcharts.com/modules/exporting.js"></script>
-
+    <script src="js/countUp.js"></script>
     <script>
 //<!--
 //Connect to Dynamo via Cognito Unauthenticated
@@ -78,11 +78,33 @@ function setOjisanComment(temperature) {
 }
 
 function setTemperatureText(value) {
-    document.getElementById("temperature").innerHTML = Math.round(value);
+    var options = {
+      useEasing: true,
+      useGrouping: true,
+      separator: ',',
+      decimal: '.',
+    };
+    var demo = new CountUp('temperature', 0, value.toFixed(1), 1, 2.5, options);
+    if (!demo.error) {
+      demo.start();
+    } else {
+      console.error(demo.error);
+    }
 }
 
 function setHumidityText(value) {
-    document.getElementById("humidity").innerHTML = Math.round(value);
+    var options = {
+      useEasing: true,
+      useGrouping: true,
+      separator: ',',
+      decimal: '.',
+    };
+    var demo = new CountUp('humidity', 0, value.toFixed(1), 1, 1.5, options);
+    if (!demo.error) {
+      demo.start();
+    } else {
+      console.error(demo.error);
+    }
 }
 
 function drawChart(temperature, humidity) {
