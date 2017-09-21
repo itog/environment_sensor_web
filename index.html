@@ -47,9 +47,42 @@ function getDynamoData() {
           temperatureData.push(parseFloat(item.payload.M.state.M.reported.M.temperature.N));
           humidityData.push(parseFloat(item.payload.M.state.M.reported.M.humidity.N));
         })
+        setTemperatureText(temperatureData[temperatureData.length - 1]);
+        setHumidityText(humidityData[humidityData.length - 1]);
         drawChart(temperatureData, humidityData);
+        setOjisanComment(temperatureData[temperatureData.length - 1]);
       }
   });
+}
+
+function setOjisanComment(temperature) {
+    var comment = "...";
+    if (temperature > 28) {
+        comment = "暑くて過ごしづらいよぅ。。。";
+    } else if (temperature > 25) {
+        comment = "暖かいねー";
+    } else if (temperature > 20) {
+        comment = "過ごしやすいなー";
+    } else if (temperature > 15) {
+        comment = "肌寒いなぁ。。。";
+    } else if (temperature > 10) {
+        comment = "さぶいー";
+    } else if (tempereture > 5) {
+        comment = "寒すぎる、、、";
+    } else if (temperature > 0) {
+        comment = "寒くて死ぬ";
+    } else {
+        comment = "なまらしばれる";
+    }
+    document.getElementById("ojisan-comment").innerHTML = comment;
+}
+
+function setTemperatureText(value) {
+    document.getElementById("temperature").innerHTML = Math.round(value);
+}
+
+function setHumidityText(value) {
+    document.getElementById("humidity").innerHTML = Math.round(value);
 }
 
 function drawChart(temperature, humidity) {
@@ -58,10 +91,7 @@ function drawChart(temperature, humidity) {
         type: 'area'
     },
     title: {
-        text: '温度＆湿度'
-    },
-    subtitle: {
-        text: 'FabKominka Environment Sensor'
+        text: ''
     },
     xAxis: {
         allowDecimals: false,
@@ -121,11 +151,13 @@ function drawChart(temperature, humidity) {
     series: [{
         name: 'temperature',
         yAxis: 0,
-        data: temperature
+        data: temperature,
+        color: '#ef6377'
     }, {
         name: 'humidity',
         yAxis: 1,
-        data: humidity
+        data: humidity,
+        color: '#4990e2'
     }]
   });
 }
@@ -143,10 +175,10 @@ function drawChart(temperature, humidity) {
             </div>
         </div>
         <div class="popup">
-            <div class="popup-text">暑くて過ごしづらいよぅ。。。</div>
+            <div id="ojisan-comment" class="popup-text">暑くて過ごしづらいよぅ。。。</div>
         </div>
     </div>
-  <div id="container" class="dataContents" style="min-width: 310px; height: 400px; margin: 0 auto">
+  <div style="width: 60%; min-width: 310px; height: 400px; background-color: white; margin: 0 auto">
     <div class="numberContents">
       <div class="numberBox numberBox-temperature">
         <div class="number_titles">
@@ -154,7 +186,7 @@ function drawChart(temperature, humidity) {
           <span class="number_en">TEMPREATURE</span>
         </div>
         <div class="number_values">
-          <span class="number_value">27</span>
+          <span id="temperature" class="number_value">0</span>
           <span class="number_unit">℃</span>
         </div>
       </div>
@@ -164,13 +196,12 @@ function drawChart(temperature, humidity) {
           <span class="number_en">HUMIDITY</span>
         </div>
         <div class="number_values">
-          <span class="number_value">64</span>
+          <span id="humidity" class="number_value">0</span>
           <span class="number_unit">%</span>
         </div>
       </div>
     </div>
-    <div id="humidityChart" />
-    <div id="temperatureChart" />
+    <div id="container" class="dataContents"  style="width: 80%; height: 300px; margin: 0 auto">
   </div>
 </body>
 </html>
