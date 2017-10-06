@@ -17,7 +17,7 @@ function getDynamoData() {
 
   AWS.config.region = 'ap-northeast-1';
   AWS.config.credentials = new AWS.CognitoIdentityCredentials({
-    IdentityPoolId: "Identity Pool Id",
+   IdentityPoolId: "Identity Pool Id",
   });
 
   db = new AWS.DynamoDB();
@@ -42,15 +42,14 @@ function getDynamoData() {
         data.Items.forEach(function(item){
           var dateNum = Number(item.timestamp.S);
           var myDate = new Date(dateNum);
-          myDate.setTime(myDate.getTime() - myDate.getTimezoneOffset()*60*1000 );
-          var strDate = myDate.toISOString();
-          temperatureData.push(parseFloat(item.payload.M.state.M.reported.M.temperature.N));
-          humidityData.push(parseFloat(item.payload.M.state.M.reported.M.humidity.N));
-        })
-        setTemperatureText(temperatureData[temperatureData.length - 1]);
-        setHumidityText(humidityData[humidityData.length - 1]);
+          myDate.setTime(myDate.getTime() - myDate.getTimezoneOffset()*60*1000);
+          temperatureData.push([myDate.toISOString(), parseFloat(item.payload.M.state.M.reported.M.temperature.N)]);
+          humidityData.push([myDate.toISOString(), parseFloat(item.payload.M.state.M.reported.M.humidity.N)]);
+        });
+        setTemperatureText(temperatureData[temperatureData.length - 1][1]);
+        setHumidityText(humidityData[humidityData.length - 1][1]);
         drawChart(temperatureData, humidityData);
-        setOjisanComment(temperatureData[temperatureData.length - 1]);
+        setOjisanComment(temperatureData[temperatureData.length - 1][1]);
       }
   });
 }
@@ -116,12 +115,7 @@ function drawChart(temperature, humidity) {
         text: ''
     },
     xAxis: {
-        allowDecimals: false,
-        labels: {
-            formatter: function () {
-                return this.value; // clean, unformatted number for year
-            }
-        }
+        type: 'datetime'
     },
     yAxis:
  [{ // Primary yAxis
